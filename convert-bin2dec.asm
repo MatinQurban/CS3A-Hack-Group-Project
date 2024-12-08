@@ -10,23 +10,26 @@
     //MULT_PRODUCT
     //exp
     //decimalValue
-    //binWord
 //RETURN CALLS:
     //after-pow
     //return-pow
     //next-pow
     //return-mult
+    //after-MULT_bdigit
+    //CB2D_loop
+    //endCB2D_loop
 
 //============================== CONVERT B2D FUNCTION ==============================
 // Numbers are going to be stored in registers R0 - R15
-// with msb being in R0
+// with sign bit in R0, and msb in R1
 // Algorithm is as follows:
 // decimalValue = decimalValue + R[i] * POW(2 , exp)
-// with exp = 15 - i
-// 
+// with exp = 14 - i
+// After decimalValue has been calculated, check sign bit.
+// if sign bit == 1, decimalValue = -decimalValue
 
 //  set loop control variable and also exponent dependency
-@15
+@14
 D=A
 @lcvB2D
 M=D
@@ -35,37 +38,27 @@ M=D
 @decimalValue
 M=0
 
-@exp
-M=0
 
-(B2D_loop)
-        //create exp
-@15 // 15 in d-reg
-D=A
-@exp// 15 into exp
-M=D
-@lcvB2D // i to d-reg
-D=M
-@exp // exp = 15 - i
-M=M-D
+(CB2D_loop)
 
         //get POW(2, exp)
-//Create return address
+
+//Create return address 
 @after-pow
 D=A
 @return-pow
 M=D
 
-    //Call POW FUNCTION, will compute POW_BASE ^ POW_EXP and store it in POW_VAL
+    //Call POW FUNCTION, will compute POW_BASE ^ POW_EXP and store the result in POW_VAL
 //create variables for pow function:
-@exp
-D=M
-@POW_EXP
-M=D
-
 @2
 D=A
 @POW_BASE
+M=D
+
+@lcvB2D
+D=M
+@POW_EXP
 M=D
 
 @POW //CALL POW
@@ -73,27 +66,61 @@ M=D
 (after-pow)  //call return address to continue here
 
 
-        //CALC: bDigit = R[i] * 2^i (using MULT function)
+
+        //CALC: bDigit = R[i] * 2^exp (using MULT function)
+@14
+D=A
+@lcvB2D
+D=D-M   // i = 14 - pow
+@R1
+A=D+A  //Get R[i]
+D=M    //Store R[i] in D-reg
+
+    //Call MULT function, it will compute: MULT_X * MULT_Y and store the result in MULT_PRODUCT
+//MULT(pow_val, D-reg) = bDigit
+//create variables for mult function:
+@MULT_X
+M=D     //R[i] in D-reg
+
+@POW_VAL
+D=M
+@MULT_Y
+M=D     //2^exp for base_2 digit place
+
+
+//Create return address 
+@after-MULT_bdigit
+D=A
+@return-mult
+M=D
+
+@MULT //CALL MULT
+0;JMP
+(after-MULT_bdigit)  //call return address to continue here
+
 
 
         //CALC: Dv = Dv + bDigit
+@MULT_PRODUCT
+D=M  // bdigit = MULT_PRODUCT
 @decimalValue
-M=D+M // Dv + bDigit
+M=D+M // bDigit + Dv
 
         //check lcvB2D
 @lcvB2D
 D=M
-@endB2D_loop
+@endCB2D_loop
 D;JEQ
 
-@B2D_loop //else, loop
+D=D-1
+@CB2D_loop //else, decrement lcv and loop
 0;JMP
 
 //Calc: 
-//  exp = 15 - lcvB2D
 //  decimalValue = decimalValue + R[i] * POW(2, exp)
+//  exp = 14 - lcvB2D
 
-(endB2D_loop)
+(endCB2D_loop)
 
 
 //============================== END CONVERT B2D FUNCTION ==============================
