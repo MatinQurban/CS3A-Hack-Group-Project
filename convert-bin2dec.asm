@@ -39,6 +39,42 @@ M=D
 M=0
 
 
+//  Check if the sign bit (R0) is 1
+@mq_b2d_negflag
+M=0
+@R0
+D=M
+@negativeDone
+D;JEQ // If R0 == 0, the number is positive, continue the program
+
+@mq_b2d_negflag
+M=1
+
+@14
+D=A
+@fb_loop_var
+M=D
+(flipBitsLoop)
+        @fb_loop_var
+        D=M
+        @R1
+        A=D+A // get bit
+        M=M^1 // Perform XOR to flip bits (thank you jk-quantized!!)
+
+    @fb_loop_var
+    M=M-1
+    D=M
+    @negativeDone
+    D;JEQ
+
+    @flipBitsLoop
+    0;JMP
+
+(negativeDone)
+
+    // Continue program execution
+
+
 (CB2D_loop)
 
         //get POW(2, exp)
@@ -73,8 +109,8 @@ D=A
 @lcvB2D
 D=D-M   // i = 14 - pow
 @R1
-A=D+A  //Get R[i]
-D=M    //Store R[i] in D-reg
+A=D+A  //  Get R[i]
+D=M    //  Store R[i] in D-reg
 
     //Call MULT function, it will compute: MULT_X * MULT_Y and store the result in MULT_PRODUCT
 //MULT(pow_val, D-reg) = bDigit
@@ -116,14 +152,71 @@ D=D-1
 @CB2D_loop //else, decrement lcv and loop
 0;JMP
 
-//Calc: 
+//Calc Done: 
 //  decimalValue = decimalValue + R[i] * POW(2, exp)
 //  exp = 14 - lcvB2D
 
 (endCB2D_loop)
 
+@mq_b2d_negflag // check for sign change
+D=M
+@mq_finish_convert
+D;JEQ
+
+//          if the value is negative, add one and flip the sign.
+@decimalValue
+M=M+1
+M=-M
+
+(mq_finish_convert)
 
 //============================== END CONVERT B2D FUNCTION ==============================
+
+
+
+// ============================== CHECK SIGN AND CONVERT ==============================
+// At the end of your binary to decimal conversion loop, check the sign bit and adjust.
+(endCB2D_loop)
+
+    // Check if the sign bit (R0) is 1
+    @R0
+    D=M
+    @positiveNumber
+    D;JEQ // If R0 == 0, the number is positive, skip to positiveNumber
+
+    // If R0 == 1, handle two's complement for negative numbers
+    // Flip all bits of decimalValue
+    @decimalValue
+    D=M
+    @flipBitsLoop
+    M=-1  // Set a mask to flip bits
+
+    (flipBitsLoop)
+        @decimalValue
+        M=M^D // Perform XOR to flip bits
+
+        // Add 1 to convert to two's complement magnitude
+        @decimalValue
+        D=M
+        @one
+        M=1
+        D=D+M
+        @decimalValue
+        M=D
+
+        // Multiply by -1 to set the correct sign
+        @decimalValue
+        M=-M
+    @negativeDone
+    0;JMP
+
+(positiveNumber)
+    // If positive, leave decimalValue unchanged
+
+(negativeDone)
+    // Continue program execution
+
+// ============================== END CHECK SIGN AND CONVERT ==============================
 
 
 
