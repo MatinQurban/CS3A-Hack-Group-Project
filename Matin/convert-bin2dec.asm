@@ -19,6 +19,63 @@
     //CB2D_loop
     //endCB2D_loop
 
+
+// 
+// This file provides the functionality to convert a 16-bit signed binary number into its 
+// decimal representation, accounting for two's complement for negative numbers. It utilizes 
+// functions for binary arithmetic operations such as multiplication and exponentiation 
+// to perform this conversion.
+//
+// The conversion algorithm follows the formula:
+//     decimalValue = Σ (R[i] * 2^(14-i))
+// where R[i] represents the binary digits, and the exponent decrements from 14 to 0. The sign 
+// bit (R0) is checked and, if set, the two's complement of the number is computed to handle 
+// negative values.
+//
+// The file contains the following key components:
+//
+// 1. **CONVERT B2D FUNCTION**: 
+//    - Iteratively calculates the decimal value of the binary input by using the `MULT` 
+//      and `POW` functions.
+//    - Computes each binary digit's contribution by multiplying the bit value by its corresponding 
+//      power of 2 (determined using the `POW` function).
+//    - Accumulates the results in `decimalValue`.
+//    - Adjusts the result for negative numbers using two's complement logic.
+//
+// 2. **SIGN CHECK AND CONVERSION**:
+//    - After the conversion loop, checks the sign bit (R0).
+//    - If the number is negative, the function flips all bits of `decimalValue`, adds 1, and 
+//      negates the result to complete the two's complement transformation.
+//
+// 3. **POW FUNCTION**:
+//    - Computes `z = x^y`, where `x` is the base, and `y` is the exponent.
+//    - Utilizes the `MULT` function to repeatedly multiply the base by itself in a loop, ensuring 
+//      modularity and code reuse.
+//    - Stores the result in `POW_VAL`.
+//
+// 4. **MULT FUNCTION**:
+//    - Computes the product of two numbers, `MULT_X` and `MULT_Y`, using repeated addition.
+//    - Handles negative multipliers by checking the sign, adjusting accordingly, and restoring 
+//      the original values after computation.
+//
+// Pre-conditions:
+//    - Input binary digits are stored in registers R0 to R15, where R0 is the sign bit and R1 
+//      to R15 hold the most significant to least significant bits.
+//    - Variables for intermediate values (e.g., `POW_BASE`, `POW_EXP`, `MULT_X`, `MULT_Y`) 
+//      must be initialized appropriately.
+//
+// Post-conditions:
+//    - The decimal equivalent of the input binary number is stored in `decimalValue`.
+//    - For negative inputs, the result correctly reflects the two's complement interpretation.
+//    - Registers and variables modified during computation are restored to their expected states.
+//
+// Call this program as follows:
+//    - Provide binary input in registers R0 to R15.
+//    - Invoke the `CONVERT B2D FUNCTION` to calculate the decimal value.
+//    - Result is stored in `decimalValue` for further use or display.
+//
+
+
 //============================== CONVERT B2D FUNCTION ==============================
 // Numbers are going to be stored in registers R0 - R15
 // with sign bit in R0, and msb in R1
