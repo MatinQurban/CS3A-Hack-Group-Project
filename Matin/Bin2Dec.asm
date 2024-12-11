@@ -1109,7 +1109,7 @@ A=M
 // -------------------------------------------
 
 // GLOBAL VARIABLES
-ge_currentColumn		// set output to 0
+@ge_currentColumn		// set output to 0
 M=0
 
 @most_significant_bit	// set most_significant_bit to 0
@@ -1133,7 +1133,7 @@ M=D
 0;JMP			// jump to ge_output_- to draw the minus portion of the arrow
 
 (KL_outputArrowContinue) // complete the arrow by drawing the >
-ge_currentColumn
+@ge_currentColumn
 M=M+1
 @KL_outputArrowReturn
 D=M
@@ -1253,7 +1253,7 @@ D=M
 @digit
 M=D
 
-BN_formattedResult
+@BN_formattedResult
 M=M+1
 
 @output_ones
@@ -1282,7 +1282,7 @@ D=M
 @digit
 M=D			// store it in digit
 
-BN_formattedResult
+@BN_formattedResult
 M=M+1
 
 @KL_outputSign_return
