@@ -642,8 +642,36 @@ M=D
         D=M
         @R1
         A=D+A // get bit
-        M=M^1 // Perform XOR to flip bits (thank you jk-quantized!!)
 
+        D=M     //store bit (0 or 1) into D-reg
+        @1
+        D=D-A       //check if bit is zero or one, run respective flip
+        @mq_bitflag_one
+        D;JEQ
+        @mq_bitflag_zero
+        D;JLT
+
+        (mq_bitflag_one)
+            @fb_loop_var
+            D=M
+            @R1
+            A=D+A // get bit (we know it's a 1)
+
+            M=0 //set to 0
+            @mq_after_flip
+            0;JMP
+
+        (mq_bitflag_zero)
+            @fb_loop_var
+            D=M
+            @R1
+            A=D+A // get bit (we know it's a 1)
+
+            M=1 //set to 1
+            @mq_after_flip
+            0;JMP
+
+    (mq_after_flip)
     @fb_loop_var
     M=M-1
     D=M
