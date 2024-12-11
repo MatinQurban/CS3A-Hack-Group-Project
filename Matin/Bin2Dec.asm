@@ -813,23 +813,23 @@ A=M
 // ===================================================================================
 
 
-/ Role2-Variables
-/ decimalValue
-/ mq_b2b_negflag Indicates the sign of the number: 1 for negative, 0 for positive.
-/ Role3 - Variables
-/ BN_decimalValue (single input from Role 2)
-/ BN_formattedResult (buffer for digits, stores numeric values)
-/ BN_formattedSign (stores "+" or "-")
-/ BN_hasLeadingZero (1 = leading zeros exist, 0 = no leading zeros)
-/ tempQuotient (stores quotient during division)
-/ tempRemainder (stores remainder during division)
-/ tempDivisor (stores divisor during division)
-/ HandleZero
-/ BN_decimalValue
-// Functions
-/ OUTPUT_FORMATTING_BEGIN
-/ BN_formatDigits - BN_formatDigits extracts and formats each digit of the decimal value into BN_formattedResult. Leading zeros are skipped until a non-zero digit is encountered.
-/ BN_divide - Performs division to extract each digit from the decimal value. Updates tempQuotient and tempRemainder.
+// Role2-Variables
+// decimalValue
+// mq_b2b_negflag Indicates the sign of the number: 1 for negative, 0 for positive.
+// Role3 - Variables
+// BN_decimalValue (single input from Role 2)
+// BN_formattedResult (buffer for digits, stores numeric values)
+// BN_formattedSign (stores "+" or "-")
+// BN_hasLeadingZero (1 = leading zeros exist, 0 = no leading zeros)
+// tempQuotient (stores quotient during division)
+// tempRemainder (stores remainder during division)
+// tempDivisor (stores divisor during division)
+// HandleZero
+// BN_decimalValue
+/// Functions
+// OUTPUT_FORMATTING_BEGIN
+// BN_formatDigits - BN_formatDigits extracts and formats each digit of the decimal value into BN_formattedResult. Leading zeros are skipped until a non-zero digit is encountered.
+// BN_divide - Performs division to extract each digit from the decimal value. Updates tempQuotient and tempRemainder.
 
 // ****************OUTPUT_FORMATTING_BEGIN******************
 // Begins the output formatting process.
