@@ -85,6 +85,10 @@
 // After decimalValue has been calculated, check sign bit.
 // if sign bit == 1, decimalValue = -decimalValue
 
+
+
+(mq_convertB2D)
+
 //  set loop control variable and also exponent dependency
 @14
 D=A
@@ -226,54 +230,14 @@ M=M+1
 M=-M
 
 (mq_finish_convert)
+//end function
+
+@mq_convert_return
+A=M
+0;JMP			// return to main; leave function
+		
 
 //============================== END CONVERT B2D FUNCTION ==============================
-
-
-
-// ============================== CHECK SIGN AND CONVERT ==============================
-// At the end of your binary to decimal conversion loop, check the sign bit and adjust.
-(endCB2D_loop)
-
-    // Check if the sign bit (R0) is 1
-    @R0
-    D=M
-    @positiveNumber
-    D;JEQ // If R0 == 0, the number is positive, skip to positiveNumber
-
-    // If R0 == 1, handle two's complement for negative numbers
-    // Flip all bits of decimalValue
-    @decimalValue
-    D=M
-    @flipBitsLoop
-    M=-1  // Set a mask to flip bits
-
-    (flipBitsLoop)
-        @decimalValue
-        M=M^D // Perform XOR to flip bits
-
-        // Add 1 to convert to two's complement magnitude
-        @decimalValue
-        D=M
-        @one
-        M=1
-        D=D+M
-        @decimalValue
-        M=D
-
-        // Multiply by -1 to set the correct sign
-        @decimalValue
-        M=-M
-    @negativeDone
-    0;JMP
-
-(positiveNumber)
-    // If positive, leave decimalValue unchanged
-
-(negativeDone)
-    // Continue program execution
-
-// ============================== END CHECK SIGN AND CONVERT ==============================
 
 
 

@@ -316,6 +316,16 @@ M=D
 @ge_output_2
 0;JMP		// print 2
 
+(hundreds_return)
+@ge_currentColumn
+M=M+1
+@tens_return
+D=A
+@ge_output_return
+M=D
+@ge_output_7
+0;JMP		// print 7
+
 (tens_return)
 @ge_currentColumn
 M=M+1
@@ -335,14 +345,6 @@ D=A
 M=D
 @ge_output_8
 0;JMP		// print 8
-
-
-
-
-
-
-
-
 
 
 

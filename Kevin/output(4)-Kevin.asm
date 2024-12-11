@@ -30,7 +30,6 @@
 // hundreds_place
 // tens_place
 // ones_place
-// pw_getInput
 // ge_output_(0-9)
 // KL_outputArrowReturn
 // KL_sign_return
@@ -43,7 +42,6 @@
 // RETURN CALLS:
 // @KL_outputArrowReturn
 // @ge_output_return
-// @pw_getInput
 // @KL_sign_return
 // @ten_thousands_return
 // @thousands_return
@@ -60,21 +58,6 @@ M=0
 M=0
 
 @leading_zero			// set no leading zero unless set later
-M=0
-
-@ten_thousands_place
-M=0
-
-@thousands_place
-M=0
-
-@hundreds_place
-M=0
-
-@tens_place
-M=0
-
-@ones_place
 M=0
 
 @digit
@@ -125,10 +108,17 @@ D=A
 M=D
 @ge_currentColumn
 M=M+1
-@ten_thousands_place
-D=M						// load the ten thousandths digit
+
+@BN_formattedResult
+A=M
+D=M
+
 @digit
 M=D
+
+@BN_formattedResult
+M=M+1
+
 @output_decimal
 D;JGT					// if digit is > 0 it jumps to output_decimal to print
 @leading_zero
@@ -139,10 +129,17 @@ M=M-1
 (output_thousand)	// handles the thousands digit output
 @ge_currentColumn
 M=M+1
-@thousands_place
-D=M					// load digit
+
+@BN_formattedResult
+A=M
+D=M
+
 @digit
 M=D
+
+@BN_formattedResult
+M=M+1
+
 @output_hundred
 D=A
 @ge_output_return
@@ -161,10 +158,17 @@ M=M-1			// move back one column if no digit is printed
 (output_hundred)	// handles the hundreds digit ouput
 @ge_currentColumn
 M=M+1
-@hundreds_place
+
+@BN_formattedResult
+A=M
 D=M
+
 @digit
 M=D
+
+@BN_formattedResult
+M=M+1
+
 @output_tens
 D=A
 @ge_output_return
@@ -183,10 +187,17 @@ M=M-1				// move back if nothing was printed
 (output_tens)		// handles the tens digit output
 @ge_currentColumn
 M=M+1
-@tens_place
+
+@BN_formattedResult
+A=M
 D=M
+
 @digit
 M=D
+
+BN_formattedResult
+M=M+1
+
 @output_ones
 D=A
 @ge_output_return
@@ -205,12 +216,17 @@ M=M-1			// move back if nothing was printed
 (output_ones)
 @ge_currentColumn
 M=M+1
-@ones_place
-D=M			// load ones digit
+
+@BN_formattedResult
+A=M
+D=M
+
 @digit
 M=D			// store it in digit
-@pw_getInput		// get input
-D=A
+
+BN_formattedResult
+M=M+1
+
 @ge_output_return
 M=D			// updates the return address after getKey is done
 
@@ -296,7 +312,7 @@ M=D
 @ge_output_-
 0;JMP		// print - sign if needed
 
-(ten_thousands_return)	move on to print 3 after dealing with the sign
+(ten_thousands_return)	// move on to print 3 after dealing with the sign
 @ge_currentColumn
 M=M+1
 @thousands_return
@@ -316,6 +332,16 @@ M=D
 @ge_output_2
 0;JMP		// print 2
 
+(hundreds_return)
+@ge_currentColumn
+M=M+1
+@tens_return
+D=A
+@ge_output_return
+M=D
+@ge_output_7
+0;JMP		// print 7
+
 (tens_return)
 @ge_currentColumn
 M=M+1
@@ -329,20 +355,10 @@ M=D
 (ones_return)
 @ge_currentColumn
 M=M+1
-@pw_getInput			// get input
-D=A
 @ge_output_return
 M=D
 @ge_output_8
 0;JMP		// print 8
-
-
-
-
-
-
-
-
 
 
 
