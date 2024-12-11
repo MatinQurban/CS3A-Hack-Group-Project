@@ -1,3 +1,9 @@
+//test:
+@120
+M=0
+@122
+M=0
+
 // ============================= MAIN =============================
 @ge_currentColumn
 M=0
@@ -640,14 +646,14 @@ D;JEQ // If R0 == 0, the number is positive, continue the program
 @mq_b2d_negflag
 M=1
 
-@14
+@15
 D=A
 @fb_loop_var
 M=D
 (flipBitsLoop)
         @fb_loop_var
         D=M
-        @R1
+        @R0
         A=D+A // get bit
 
         D=M     //store bit (0 or 1) into D-reg
@@ -669,6 +675,11 @@ M=D
             0;JMP
 
         (mq_bitflag_zero)
+//test code:
+@11111
+D=A
+@122
+M=D
             @fb_loop_var
             D=M
             @R1
@@ -1042,6 +1053,7 @@ A=M
 // ================================================
 (BN_passToDisplay)
     @BN_displayHelper
+    A=M
     0;JMP
 
 
