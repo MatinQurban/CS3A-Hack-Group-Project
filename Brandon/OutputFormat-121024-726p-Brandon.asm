@@ -174,8 +174,13 @@
     @BN_formattedResult
     M=M+1
     @BN_hasLeadingZero
-    M=0              // Disable leading zeros
+    M=1              // Disable leading zeros
 (SkipDigit)
+//test code:
+@91
+D=M
+@91
+M=D
     @tempRemainder
     D=M
     @BN_decimalValue

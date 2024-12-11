@@ -4,9 +4,12 @@ M=0
 
 @q_after_clear
 M=0
+
+@decimalValue
+M=1
     // read and print inputs from user
 // Create return address
-@main-after_pw_getInput
+@main_after_pw_getInput
 D=A
 @pw_getInput_return
 M=D
@@ -15,13 +18,13 @@ M=D
 @pw_getInput
 0;JMP
 
-(main-after_pw_rpInput)
+(main_after_pw_getInput)
 // At this point the user has hit enter, and stored a 16-bit binary word in R0-15 registers
 
     // convert binary word in R0-15 into decimal value
 //mq_convert
 // Create return address
-@main-after_mq_convert
+@main_after_mq_convert
 D=A
 @mq_convert_return
 M=D
@@ -30,12 +33,12 @@ M=D
 @mq_convertB2D
 0;JMP
 
-(main-after_mq_convert)
+(main_after_mq_convert)
 // At this point we have a converted to decimal 2's complement binary word into variable decimalValue
 
     // convert result to print
 // Create return address
-@main-after_BN_format
+@main_after_BN_format
 D=A
 @BN_displayHelper
 M=D
@@ -44,7 +47,7 @@ M=D
 @BN_formatDigits
 0;JMP
 
-(main-after_BN_format)
+(main_after_BN_format)
 //Now, all the digits and their respective places are being held in the array BN_formatDigits.
     
     // output result
@@ -52,7 +55,7 @@ M=D
 
 //output arrow:
 // Create return address
-@main-after_kl_arrow
+@main_after_kl_arrow
 D=A
 @KL_outputArrowReturn
 M=D
@@ -60,11 +63,11 @@ M=D
 @KL_outputArrow //call
 0;JMP
 
-(main-after_kl_arrow)
+(main_after_kl_arrow)
 
 //output sign and number:
 // Create return address
-@main-after_kl_sign
+@main_after_kl_sign
 D=A
 @KL_outputSign_return
 M=D
@@ -72,7 +75,7 @@ M=D
 @KL_outputSign
 0;JMP       // call
 
-(main-after_kl_sign)
+(main_after_kl_sign)
 
 @ENDB2D_MAIL_FILE
 0;JMP
@@ -325,7 +328,11 @@ M=D
 				0;JMP			// goto pw_getInput_end for a key holding prevention check
 
 	(pw_input_enter)
-			
+//test code:
+@11111
+D=A
+@120
+M=D
 		@pw_getInput_return
 		A=M
 		0;JMP					// return to main; leave function
@@ -782,6 +789,7 @@ M=-M
 (mq_finish_convert)
 //end function
 
+
 @mq_convert_return
 A=M
 0;JMP			// return to main; leave function
@@ -884,6 +892,9 @@ A=M
     D=M
     @HandleZero
     D;JEQ            // If `decimalValue` is 0, handle it directly
+
+    @BN_hasLeadingZero
+    M=0
 
     @10000
     D=A
