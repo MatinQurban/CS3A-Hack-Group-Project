@@ -227,8 +227,21 @@ M=D			// store it in digit
 BN_formattedResult
 M=M+1
 
+@KL_outputSign_return
+D=A
 @ge_output_return
-M=D			// updates the return address after getKey is done
+M=D
+@digit
+D=M
+@output_decimal
+D;JGT
+@leading_zero
+D=M
+@output_decimal
+D;JGT
+@ge_currentColumn
+M=M-1			// move back if nothing was printed
+
 
 (output_decimal) // checks which decimal is stored in digit and calls the correct ge_output_ function
 @leading_zero

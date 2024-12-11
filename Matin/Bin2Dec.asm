@@ -30,8 +30,19 @@ M=D
 // At this point we have a converted to decimal 2's complement binary word into variable decimalValue
 
     // convert result to print
-bw_outputFormat
+// Create return address
+@main-after_BN_format
+D=A
+@BN_displayHelper
+M=D
 
+// call format
+@BN_formatDigits
+0;JMP
+
+(main-after_BN_format)
+//Now, all the digits and their respective places are being held in the array BN_formatDigits.
+    
     // output result
 //kl_outputValue
 
@@ -47,16 +58,20 @@ M=D
 
 (main-after_kl_arrow)
 
-//output sign:
+//output sign and number:
 // Create return address
 @main-after_kl_sign
 D=A
-@KL_outputArrowReturn
+@KL_outputSign_return
 M=D
 
-//KL_outputSign
+@KL_outputSign
+0;JMP       // call
 
+(main-after_kl_sign)
 
+@ENDB2D_MAIL_FILE
+0;JMP
 
 // ============================= END MAIN =============================
 
@@ -85,3 +100,12 @@ M=D
 
 // output helpers
     //ge_output_x
+
+
+
+
+
+
+
+
+(ENDB2D_MAIL_FILE)
