@@ -1,9 +1,3 @@
-//test:
-@120
-M=0
-@122
-M=0
-
 // ============================= MAIN =============================
 @ge_currentColumn
 M=0
@@ -28,7 +22,6 @@ M=D
 // At this point the user has hit enter, and stored a 16-bit binary word in R0-15 registers
 
     // convert binary word in R0-15 into decimal value
-//mq_convert
 // Create return address
 @main_after_mq_convert
 D=A
@@ -57,8 +50,6 @@ M=D
 //Now, all the digits and their respective places are being held in the array BN_formatDigits.
     
     // output result
-//kl_outputValue
-
 //output arrow:
 // Create return address
 @main_after_kl_arrow
@@ -83,7 +74,7 @@ M=D
 
 (main_after_kl_sign)
 
-@ENDB2D_MAIL_FILE
+@ENDB2D_MAIN_FILE
 0;JMP
 
 // ============================= END MAIN =============================
@@ -334,11 +325,6 @@ M=D
 				0;JMP			// goto pw_getInput_end for a key holding prevention check
 
 	(pw_input_enter)
-//test code:
-@11111
-D=A
-@120
-M=D
 		@pw_getInput_return
 		A=M
 		0;JMP					// return to main; leave function
@@ -675,11 +661,6 @@ M=D
             0;JMP
 
         (mq_bitflag_zero)
-//test code:
-@11111
-D=A
-@122
-M=D
             @fb_loop_var
             D=M
             @R1
@@ -1387,72 +1368,6 @@ D=D-A
 D;JEQ			// if digit is 9, jump to draw 9
 
 
-// SPECIAL CASE HANDLING
-(KL_output_special_case) // handles special case output if its needed
-@KL_sign_return	// sets return to KL_sign_return
-D=A
-@KL_outputArrowReturn	// updates KL_outputArrowReturn
-M=D
-@KL_outputArrow
-0;JMP // jumps back to KL_outputArrow to reprint an arrow or sign if needed
-
-(KL_sign_return)	// called after KL_output_special_case to return or print a sign/character
-@ge_currentColumn
-M=M+1
-@ten_thousands_return // sets return to ten_thousands_return
-D=A
-@ge_output_return
-M=D
-@ge_output_-
-0;JMP		// print - sign if needed
-
-(ten_thousands_return)	// move on to print 3 after dealing with the sign
-@ge_currentColumn
-M=M+1
-@thousands_return
-D=A
-@ge_output_return
-M=D
-@ge_output_3
-0;JMP			// print 3
-
-(thousands_return)
-@ge_currentColumn
-M=M+1
-@hundreds_return
-D=A
-@ge_output_return
-M=D
-@ge_output_2
-0;JMP		// print 2
-
-(hundreds_return)
-@ge_currentColumn
-M=M+1
-@tens_return
-D=A
-@ge_output_return
-M=D
-@ge_output_7
-0;JMP		// print 7
-
-(tens_return)
-@ge_currentColumn
-M=M+1
-@ones_return
-D=A
-@ge_output_return
-M=D
-@ge_output_6
-0;JMP		// print 6
-
-(ones_return)
-@ge_currentColumn
-M=M+1
-@ge_output_return
-M=D
-@ge_output_8
-0;JMP		// print 8
 // ===============================  END KL_output  ==================================
 
 
@@ -2644,4 +2559,6 @@ M=D
 
 
 
-(ENDB2D_MAIL_FILE)
+(ENDB2D_MAIN_FILE)
+    @ENDB2D_MAIN_FILE
+    0;JMP
